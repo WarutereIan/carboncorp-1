@@ -77,7 +77,7 @@ const renderData = (item: {
   name: string;
   href: string;
   icon: IconType;
-  current: true;
+  current: boolean;
 }) => (
   <NavLink
     key={item.name}

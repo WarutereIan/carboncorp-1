@@ -66,7 +66,7 @@ const GeographyChart = ({ isDashboard = false }) => {
                   {
                     on: "hover",
                     style: {
-                      itemTextColor: "#ffffff",
+                      itemTextColor: "#111",
                       itemOpacity: 1,
                     },
                   },
