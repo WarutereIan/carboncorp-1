@@ -17,8 +17,9 @@ import Line from "./pages/Line.tsx";
 import Wallet from "./pages/Wallet.tsx";
 import MarketPlace from "./pages/MarketPlace.tsx";
 import DashBoard from "./pages/DashBoard.tsx";
-import Simple from './pages/Simple';
-import Complex from './pages/Complex';
+import Simple from "./pages/Simple";
+import Complex from "./pages/Complex";
+import Projects from "./pages/Projects.tsx";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/projects",
+    element: (
+      <DashboardHOC>
+        <Projects />
+      </DashboardHOC>
+    ),
+  },
+  {
     path: "/market",
     element: (
       <DashboardHOC>
@@ -87,11 +96,11 @@ const router = createBrowserRouter([
       },
       {
         path: "simple",
-        element: <Simple/>,
+        element: <Simple />,
       },
       {
         path: "advanced",
-        element: <Complex/>,
+        element: <Complex />,
       },
     ],
   },
