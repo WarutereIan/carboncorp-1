@@ -1,10 +1,11 @@
 import Carousel from "react-multi-carousel";
 import ProjectsTable from "../components/ProjectsTable";
+import "react-multi-carousel/lib/styles.css";
 
 const Projects = () => {
   return (
     <div>
-      <article className="w-full h-52">
+      <article className="w-full ">
         <Carousel
           additionalTransfrom={0}
           arrows
@@ -29,7 +30,7 @@ const Projects = () => {
                 max: 3000,
                 min: 1024,
               },
-              items: 3,
+              items: 5,
               partialVisibilityGutter: 40,
             },
             mobile: {
@@ -58,70 +59,81 @@ const Projects = () => {
           slidesToSlide={1}
           swipeable
         >
-          {/* <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 1"
-            headline="w3js.com - web front-end studio"
+          <WithStyles
+            description="CARBON PROJECT"
+            headline="LAMU MANGROVE"
             image="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 2"
-            headline="w3js.com - web front-end studio"
+            description="CARBON PROJECT"
+            headline="CHYULU HILLS"
             image="https://images.unsplash.com/photo-1549396535-c11d5c55b9df?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 1"
-            headline="w3js.com - web front-end studio"
+            description="CARBON PROJECT"
+            headline="TAITA TAVETA MINES"
             image="https://images.unsplash.com/photo-1550133730-695473e544be?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Appending currency sign to a purchase form in your e-commerce site using plain JavaScript."
-            headline="w3js.com - web front-end studio"
+            description="CARBON PROJECT"
+            headline="MURANGA TREE PLANTING"
             image="https://images.unsplash.com/photo-1550167164-1b67c2be3973?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 1"
-            headline="w3js.com - web front-end studio"
+            description="CARBON PROJECT"
+            headline="E-BIKES KENYA"
             image="https://images.unsplash.com/photo-1550338861-b7cfeaf8ffd8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 2"
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1550223640-23097fc71cb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="LAMU MANGROVE"
+            image="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Fixing CSS load order/style.chunk.css incorrect in Nextjs"
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1550353175-a3611868086b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="CHYULU HILLS"
+            image="https://images.unsplash.com/photo-1549396535-c11d5c55b9df?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="React Carousel with Server Side Rendering Support – Part 1"
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1550330039-a54e15ed9d33?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="TAITA TAVETA MINES"
+            image="https://images.unsplash.com/photo-1550133730-695473e544be?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Fixing CSS load order/style.chunk.css incorrect in Nextjs"
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1549737328-8b9f3252b927?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="MURANGA TREE PLANTING"
+            image="https://images.unsplash.com/photo-1550167164-1b67c2be3973?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Appending currency sign to a purchase form in your e-commerce site using plain JavaScript."
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1549833284-6a7df91c1f65?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="E-BIKES KENYA"
+            image="https://images.unsplash.com/photo-1550338861-b7cfeaf8ffd8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Fixing CSS load order/style.chunk.css incorrect in Nextjs"
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1549985908-597a09ef0a7c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+            description="CARBON PROJECT"
+            headline="LAMU MANGROVE"
+            image="https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
           />
           <WithStyles
-            description="Appending currency sign to a purchase form in your e-commerce site using plain JavaScript."
-            headline="w3js.com - web front-end studio"
-            image="https://images.unsplash.com/photo-1550064824-8f993041ffd3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
-          /> */}
-
-          {new Array(5).fill(null).map((_, i) => (
-            <div key={i}> fffhfh</div>
-          ))}
+            description="CARBON PROJECT"
+            headline="CHYULU HILLS"
+            image="https://images.unsplash.com/photo-1549396535-c11d5c55b9df?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+          />
+          <WithStyles
+            description="CARBON PROJECT"
+            headline="TAITA TAVETA MINES"
+            image="https://images.unsplash.com/photo-1550133730-695473e544be?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+          />
+          <WithStyles
+            description="CARBON PROJECT"
+            headline="MURANGA TREE PLANTING"
+            image="https://images.unsplash.com/photo-1550167164-1b67c2be3973?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+          />
+          <WithStyles
+            description="CARBON PROJECT"
+            headline="E-BIKES KENYA"
+            image="https://images.unsplash.com/photo-1550338861-b7cfeaf8ffd8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+          />
         </Carousel>
       </article>
       <article>
@@ -133,5 +145,26 @@ const Projects = () => {
 
 export default Projects;
 
-
-
+interface Props {
+  description: string;
+  headline: string;
+  image: string;
+}
+const WithStyles = ({ description, headline, image }: Props) => {
+  return (
+    <div className="relative h-60 overflow-hidden rounded-lg">
+      <img
+        src={image}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+      <div className="absolute inset-0 bg-black/50 mix-blend-multiply" />
+      <div className="relative flex h-full items-end justify-start">
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-white">{headline}</h2>
+          <p className="mt-1 text-sm text-white">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
