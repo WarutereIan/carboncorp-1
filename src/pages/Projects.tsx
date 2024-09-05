@@ -133,26 +133,5 @@ const Projects = () => {
 
 export default Projects;
 
-interface Props {
-  description: string;
-  headline: string;
-  image: string;
-}
-const WithStyles = ({ description, headline, image }: Props) => {
-  return (
-    <div className="relative h-96 overflow-hidden rounded-lg">
-      <img
-        src={image}
-        alt=""
-        className="absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div className="absolute inset-0 bg-black/50 mix-blend-multiply" />
-      <div className="relative flex h-full items-end justify-start">
-        <div className="p-6">
-          <h2 className="text-lg font-bold text-white">{headline}</h2>
-          <p className="mt-1 text-sm text-white">{description}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+
+
