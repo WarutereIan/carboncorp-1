@@ -13,21 +13,21 @@ const Complex = () => {
       </div>
       <div className="grid grid-cols-5 gap-5 w-full">
         <article className="col-span-3 ">
-          <div className="bg-white p-4 rounded-lg flex smb-2  items-center gap-4">
+          <div className="bg-white p-4 rounded-lg flex mb-2 text-xs  items-center gap-4">
             <div className="flex items-center gap-3">
-              <img src={Logo} className="h-12" />
-              <p className="font-bold text-xl text-black">CC/USDT</p>
+              <img src={Logo} className="h-10" />
+              <p className="font-bold text-sm text-black">CC/USDT</p>
             </div>
             <div>
-              <p className="text-[#419E6A] font-bold text-lg">2,238.00</p>
+              <p className="text-[#419E6A] font-bold text-sm">2,238.00</p>
               <p className="text-[#767E9C]">Last market price</p>
             </div>
             <div>
-              <p className="text-[#419E6A] font-semibold text-lg">+1.75%</p>
+              <p className="text-[#419E6A] font-semibold text-sm">+1.75%</p>
               <p className="text-[#767E9C]">24h Change</p>
             </div>
             <div>
-              <p className="text-[#111] font-semibold text-lg">3,597.80</p>
+              <p className="text-[#111] font-semibold text-sm">3,597.80</p>
               <p className="text-[#767E9C]">24h High</p>
             </div>
             <div>
@@ -46,9 +46,7 @@ const Complex = () => {
           </div>
         </article>
 
-        <article className="col-span-2 border p-5">
-          This is the second child
-        </article>
+        <article className="col-span-2 border p-5"></article>
       </div>
     </div>
   );
