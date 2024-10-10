@@ -1,13 +1,43 @@
 import { FaArrowRight, FaCog } from "react-icons/fa";
 import { IoSwapVertical } from "react-icons/io5";
+import Dropdown from "../components/Dropdown";
+import { getCCBalance, getPoolRatio, getTTBalance } from "../utils/ccUtils";
 
 const Simple = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { isConnected, address } = useAccount();
+  const [swapAmount, setSwapAmount] = useState(0);
+
+  const swapCC = (ccltAmount: number) => {
+    const { writeContract } = useWriteContract();
+
+    const cclt = ethers.parseUnits((ccltAmount * 10 ** 18).toString(), "wei");
+
+    console.log("cclt", cclt);
+
+    writeContract({
+      abi: ccswapAbi,
+      address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+      functionName: "swapCC",
+      args: [cclt],
+      chainId: 4202,
+    });
+
+    return;
+  };
+
+  const handleSwap = () => {
+    swapCC(swapAmount);
+  };
+
   return (
     <div className="flex justify-center items-center">
       <article>
         <div className="flex justify-end">
-          <button onClick={() => navigate("/market/advanced")} className="mb-2 p-2 hover:bg-[#252b36] border text-sm rounded-lg flex items-center gap-2">
+          <button
+            onClick={() => navigate("/market/advanced")}
+            className="mb-2 p-2 hover:bg-[#252b36] border text-sm rounded-lg flex items-center gap-2"
+          >
             Advanced <FaArrowRight />
           </button>
         </div>
@@ -22,21 +52,37 @@ const Simple = () => {
             </div>
             <div className="h-24 bg-[#2b3342] rounded-lg flex flex-col justify-between p-3">
               <div className="flex justify-between items-center">
-                <DropDown />
-                <p className="text-[#717A8C]">0</p>
+                <Dropdown asset="CC" label="" />
+                <input
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  className="block py-2 pl-3 w-40 border rounded-md border-gray-300 pr-10 text-black"
+                  onChange={(e) => setSwapAmount(Number(e.target.value))}
+                />
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-[#717A8C]">Balance: 2.8989 CC (Max)</p>
+                <p className="text-[#717A8C]">
+                  Balance: {getCCBalance(address)} CC{" "}
+                </p>
                 <p className="text-[#717A8C]"> = $ 626.23</p>
               </div>
             </div>
             <div className="h-24 bg-[#2b3342] rounded-lg flex flex-col justify-between p-3">
               <div className="flex justify-between items-center">
-                <DropDown />
-                <p className="text-[#717A8C]">0</p>
+                <Dropdown asset="TT" label="" />
+                {/*  <input
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  className="block py-2 pl-3 w-20 border rounded-md border-gray-300 pr-10 text-black"
+                  onChange={(e) => setDepositAmount(Number(e.target.value))}
+                /> */}
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-[#717A8C]">Balance: 2.8989 CC (Max)</p>
+                <p className="text-[#717A8C]">
+                  Balance: {getTTBalance(address)} TT
+                </p>
                 <p className="text-[#717A8C]"> = $ 626.23</p>
               </div>
             </div>
@@ -51,19 +97,24 @@ const Simple = () => {
             <div className=" p-3 bg-[#2b3342] rounded-lg border border-[#516AE4]">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[#717A8C]">Price</p>
-                <p className="text-[#717A8C]">0 USDT</p>
+                <p className="text-[#717A8C]">{getPoolRatio()} TT</p>
               </div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[#717A8C]">You will receive</p>
-                <p className="text-[#717A8C]">0CC = 0 USDT</p>
+                <p className="text-[#717A8C]">
+                  {swapAmount} CC = {swapAmount * getPoolRatio()} TT
+                </p>
               </div>
               <div className="flex items-center justify-between mb-2">
-                <p className="text-[#717A8C]">Fee</p>
-                <p className="text-[#717A8C]">0.53 USDT</p>
+                {/* <p className="text-[#717A8C]">Fee</p>
+                <p className="text-[#717A8C]">0 TT</p> */}
               </div>
             </div>
 
-            <button className="w-full text-lg p-3 shadow-lg bg-[#516AE4] rounded-lg">
+            <button
+              className="w-full text-lg p-3 shadow-lg bg-[#516AE4] rounded-lg"
+              onClick={handleSwap}
+            >
               Swap
             </button>
           </div>
@@ -79,6 +130,10 @@ import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
+
+import { useAccount, useWriteContract } from "wagmi";
+import { ethers } from "ethers";
+import { ccswapAbi } from "../utils/abis/ccswap";
 
 const people = [
   { id: 1, name: "CC" },
