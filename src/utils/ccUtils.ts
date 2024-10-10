@@ -1,4 +1,4 @@
-import { Account, erc20Abi } from "viem";
+import { erc20Abi } from "viem";
 
 import * as ethers from "ethers";
 
@@ -7,7 +7,7 @@ import { useWriteContract } from "wagmi";
 import { ccswapAbi } from "./abis/ccswap";
 import { useEffect, useState } from "react";
 
-export const getCCBalance = (address: `0x${string}` | Account | undefined) => {
+export const getCCBalance = (address: `0x${string}`) => {
   const [balance, setBalance] = useState<string>("0");
 
   const { data: balanceTT, refetch } = useReadContract({
@@ -17,7 +17,6 @@ export const getCCBalance = (address: `0x${string}` | Account | undefined) => {
     args: [address],
     account: address,
     chainId: 4202,
-    watch: true,
   });
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export const getCCBalance = (address: `0x${string}` | Account | undefined) => {
   return Number(balance).toFixed(4);
 };
 
-export const getTTBalance = (address: `0x${string}` | Account | undefined) => {
+export const getTTBalance = (address: `0x${string}`) => {
   const [balance, setBalance] = useState<string>("0");
 
   const { data: balanceTT, refetch } = useReadContract({
@@ -53,7 +52,6 @@ export const getTTBalance = (address: `0x${string}` | Account | undefined) => {
     args: [address],
     account: address,
     chainId: 4202,
-    watch: true,
   });
 
   useEffect(() => {
@@ -79,9 +77,7 @@ export const getTTBalance = (address: `0x${string}` | Account | undefined) => {
   return Number(balance).toFixed(4);
 };
 
-export const getCCLTBalance = (
-  address: `0x${string}` | Account | undefined
-) => {
+export const getCCLTBalance = (address: `0x${string}`) => {
   const [balance, setBalance] = useState<string>("0");
 
   const { data: balanceTT, refetch } = useReadContract({
@@ -91,7 +87,6 @@ export const getCCLTBalance = (
     args: [address],
     account: address,
     chainId: 4202,
-    watch: true,
   });
 
   useEffect(() => {
@@ -165,6 +160,7 @@ export const withdrawLiquidity = (ccltAmount: number) => {
 
   return;
 };
+
 export const swapCC = (ccltAmount: number) => {
   const { writeContract } = useWriteContract();
 

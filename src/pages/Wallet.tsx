@@ -7,13 +7,11 @@ import {
   useConnect,
   useAccount,
   useDisconnect,
-  useReadContract,
   useWriteContract,
 } from "wagmi";
 
 import { ethers } from "ethers";
 import {
-  depositLiquidity,
   getCCBalance,
   getCCLTBalance,
   getPoolRatio,
@@ -174,8 +172,8 @@ const Wallet = () => {
             </div>
             <div className="flex justify-between items-center">
               <p className="text-[#76809D]">Available</p>
-              <p className="text-[#76809D]">{getCCBalance(address)} CC</p>
-              <p className="text-[#76809D]">{getTTBalance(address)} TT</p>
+              <p className="text-[#76809D]">{getCCBalance(address!)} CC</p>
+              <p className="text-[#76809D]">{getTTBalance(address!)} TT</p>
             </div>
             <p className="text-[#76809D]">
               Amount to be deposited: {depositAmount} CC :{" "}
@@ -258,11 +256,15 @@ const Wallet = () => {
             <div>
               <div className="flex justify-between items-center">
                 <p className="text-[#76809D]">Available</p>
-                <p className="text-[#76809D]">{getCCLTBalance(address)} CCLT</p>
+                <p className="text-[#76809D]">
+                  {getCCLTBalance(address!)} CCLT
+                </p>
               </div>
               <div className="flex justify-between items-center">
                 <p className="text-[#76809D]">Locked Balances</p>
-                <p className="text-[#76809D]">{getCCLTBalance(address)} CCLT</p>
+                <p className="text-[#76809D]">
+                  {getCCLTBalance(address!)} CCLT
+                </p>
               </div>
             </div>
             <div className="mt-3 flex items-center gap-3 justify-end">

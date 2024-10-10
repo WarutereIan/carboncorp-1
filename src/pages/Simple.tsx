@@ -5,7 +5,7 @@ import { getCCBalance, getPoolRatio, getTTBalance } from "../utils/ccUtils";
 
 const Simple = () => {
   const navigate = useNavigate();
-  const { isConnected, address } = useAccount();
+  const { address } = useAccount();
   const [swapAmount, setSwapAmount] = useState(0);
 
   const swapCC = (ccltAmount: number) => {
@@ -63,7 +63,7 @@ const Simple = () => {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-[#717A8C]">
-                  Balance: {getCCBalance(address)} CC{" "}
+                  Balance: {getCCBalance(address!)} CC{" "}
                 </p>
                 <p className="text-[#717A8C]"> = $ 626.23</p>
               </div>
@@ -81,7 +81,7 @@ const Simple = () => {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-[#717A8C]">
-                  Balance: {getTTBalance(address)} TT
+                  Balance: {getTTBalance(address!)} TT
                 </p>
                 <p className="text-[#717A8C]"> = $ 626.23</p>
               </div>
