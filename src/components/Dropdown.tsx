@@ -15,6 +15,7 @@
 
 interface Props {
   label: string;
+  asset: string;
 }
 export default function Example(props: Props) {
   return (
@@ -31,9 +32,9 @@ export default function Example(props: Props) {
         className="mt-1 block w-full border rounded-md border-gray-300 text-black py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         defaultValue="CC"
       >
-        <option>CC</option>
-        <option>Metamask</option>
-        <option>WalletConnect</option>
+        <option>{props.asset}</option>
+        {/* <option></option>
+        <option></option> */}
       </select>
     </div>
   );
