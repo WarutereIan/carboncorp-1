@@ -11,12 +11,7 @@ import {
 } from "wagmi";
 
 import { ethers } from "ethers";
-import {
-  getCCBalance,
-  getCCLTBalance,
-  getPoolRatio,
-  getTTBalance,
-} from "../utils/ccUtils";
+import { getCCBalance, getCCLTBalance, getTTBalance } from "../utils/ccUtils";
 import { ccswapAbi } from "../utils/abis/ccswap";
 
 const Wallet = () => {
@@ -42,40 +37,43 @@ const Wallet = () => {
   const { connectors, connect } = useConnect();
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
-  const [depositAmount, setDepositAmount] = useState(0);
+  const [ccDepositAmount, setCCDepositAmount] = useState(0);
+  const [ttDepositAmount, setTTDepositAmount] = useState(0);
   const [withdrawalAmount, setWithdrawalAmount] = useState(0);
+  const [activeAction, setActiveAction] = useState(0);
 
-  const { writeContract, isSuccess, error } = useWriteContract();
+  let { writeContract, isSuccess, error, isPending } = useWriteContract();
 
   const depositLiquidity = (ccAmount: number, ttAmount: number) => {
-    const cc = ethers.parseUnits((ccAmount * 10 ** 18).toString(), "wei");
-    const tt = ethers.parseUnits((ttAmount * 10 ** 18).toString(), "wei");
+    const cc = ethers.parseUnits(ccAmount.toString(), "ether");
+    let tt = ethers.parseUnits(ttAmount.toString(), "ether");
 
     console.log("cc", cc, "tt", tt);
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
       functionName: "addLiquidity",
       args: [cc, tt],
       chainId: 4202,
     });
   };
 
-  const ratio = getPoolRatio();
+  //const ratio = getPoolRatio();
 
   const handleDeposit = () => {
-    depositLiquidity(depositAmount, depositAmount / ratio);
+    setActiveAction(1);
+    depositLiquidity(ccDepositAmount, ttDepositAmount);
   };
 
   const withdrawLiquidity = (ccltAmount: number) => {
-    const cclt = ethers.parseUnits((ccltAmount * 10 ** 18).toString(), "wei");
+    const cclt = ethers.parseUnits(ccltAmount.toString(), "ether");
 
     console.log("cclt", cclt);
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
       functionName: "removeLiquidity",
       args: [cclt],
       chainId: 4202,
@@ -85,6 +83,7 @@ const Wallet = () => {
   };
 
   const handleWithdrawal = () => {
+    setActiveAction(2);
     withdrawLiquidity(withdrawalAmount);
   };
 
@@ -154,19 +153,32 @@ const Wallet = () => {
                   htmlFor="account-number"
                   className="block text-sm font-medium text-black"
                 >
-                  Amount in CC (Pool Ratio CC:TT = {getPoolRatio()} )
+                  Amount in CC:
                 </label>
-                <div className="relative mt-1 rounded-md shadow-sm">
+                <div className="relative mt-1 rounded-md shadow-sm ">
                   <input
                     type="number"
                     name="amount"
                     id="amount"
                     className="block py-2 pl-3 w-full border rounded-md border-gray-300 pr-10 text-black"
-                    onChange={(e) => setDepositAmount(Number(e.target.value))}
+                    onChange={(e) => setCCDepositAmount(Number(e.target.value))}
                   />
-                  <div className="pointer-events-none absolute text-blue-400 inset-y-0 right-0 flex items-center pr-3">
+                  <label
+                    htmlFor="account-number"
+                    className="block text-sm font-medium text-black"
+                  >
+                    Amount in TT:
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    className="block py-2 pl-3 w-full border rounded-md border-gray-300 pr-10 text-black mt-1"
+                    onChange={(e) => setTTDepositAmount(Number(e.target.value))}
+                  />
+                  {/*   <div className="pointer-events-none absolute text-blue-400 inset-y-0 right-0 flex items-center pr-3">
                     MAX
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -175,10 +187,10 @@ const Wallet = () => {
               <p className="text-[#76809D]">{getCCBalance(address!)} CC</p>
               <p className="text-[#76809D]">{getTTBalance(address!)} TT</p>
             </div>
-            <p className="text-[#76809D]">
+            {/* <p className="text-[#76809D]">
               Amount to be deposited: {depositAmount} CC :{" "}
-              {depositAmount / getPoolRatio()} TT
-            </p>
+              {(depositAmount / (getPoolRatio() * 10 ** -18)).toFixed(4)} TT
+            </p> */}
 
             {/*  <div>
               <h6 className="text-[#76809D]">Expiration time</h6>
@@ -210,7 +222,12 @@ const Wallet = () => {
               </div>
             </div> */}
             <div className="mt-3 flex items-center gap-3 justify-end">
-              <button className="text-black p-2 border  rounded-lg">
+              <button
+                className="text-black p-2 border  rounded-lg"
+                onClick={() => {
+                  setActiveAction(0);
+                }}
+              >
                 Cancel
               </button>
               <button
@@ -220,10 +237,17 @@ const Wallet = () => {
                 Confirm Deposit
               </button>
             </div>
-
-            {isSuccess && <p className="text-[#76809D]">Deposit successful!</p>}
-            {error && (
-              <p className="text-[#76809D]">Error: Error making transaction</p>
+            {activeAction == 1 && isPending && !isSuccess && (
+              <p className="text-[#76809D]">Loading...</p>
+            )}
+            {activeAction == 1 && isSuccess && (
+              <p className="text-[#76809D]">Deposit successful!</p>
+            )}
+            {activeAction == 1 && error && (
+              <p className="text-[#76809D]">Error making transaction</p>
+            )}
+            {activeAction == 1 && error && (
+              <div className="text-red-500 mt-2">Error: {error.name}</div>
             )}
           </div>
           <div className="p-5 bg-white rounded-lg w-[25rem]">
@@ -268,7 +292,14 @@ const Wallet = () => {
               </div>
             </div>
             <div className="mt-3 flex items-center gap-3 justify-end">
-              <button className="text-black p-2 border  rounded-lg">
+              <button
+                className="text-black p-2 border  rounded-lg"
+                onClick={() => {
+                  if (error) {
+                    error.message = "";
+                  }
+                }}
+              >
                 Cancel
               </button>
               <button
@@ -278,6 +309,18 @@ const Wallet = () => {
                 Confirm Withdraw
               </button>
             </div>
+            {activeAction == 2 && isPending && !isSuccess && (
+              <p className="text-[#76809D]">Loading...</p>
+            )}
+            {activeAction == 2 && isSuccess && (
+              <p className="text-[#76809D]">Withdrawal successful!</p>
+            )}
+            {activeAction == 2 && error && (
+              <p className="text-[#76809D]">Error making transaction</p>
+            )}
+            {activeAction == 2 && error && (
+              <div className="text-red-500 mt-2">Error: {error.message}</div>
+            )}
           </div>
 
           <div>

@@ -82,7 +82,7 @@ export const getCCLTBalance = (address: `0x${string}`) => {
 
   const { data: balanceTT, refetch } = useReadContract({
     abi: erc20Abi,
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     functionName: "balanceOf",
     args: [address],
     account: address,
@@ -96,7 +96,7 @@ export const getCCLTBalance = (address: `0x${string}`) => {
   }, [balanceTT]);
 
   useWatchContractEvent({
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     abi: erc20Abi,
     eventName: "Transfer",
     onLogs(logs) {
@@ -115,13 +115,29 @@ export const getCCLTBalance = (address: `0x${string}`) => {
 export const getPoolRatio = () => {
   const { data: poolRatio } = useReadContract({
     abi: ccswapAbi,
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     functionName: "getPoolRatio",
-    blockTag: "safe",
+    //blockTag: "safe",
     chainId: 4202,
   });
 
-  return Number(poolRatio);
+  console.log(poolRatio);
+
+  return poolRatio ? Number(poolRatio) : 1;
+};
+
+export const getCCtoTTPrice = () => {
+  const { data: CCtoTTPrice } = useReadContract({
+    abi: ccswapAbi,
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
+    functionName: "getAssetPrice",
+    //blockTag: "safe",
+    chainId: 4202,
+  });
+
+  console.log(CCtoTTPrice);
+
+  return CCtoTTPrice ? Number(CCtoTTPrice) : 1;
 };
 
 export const depositLiquidity = (ccAmount: number, ttAmount: number) => {
@@ -134,7 +150,7 @@ export const depositLiquidity = (ccAmount: number, ttAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     functionName: "addLiquidity",
     args: [cc, tt],
     chainId: 4202,
@@ -152,7 +168,7 @@ export const withdrawLiquidity = (ccltAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     functionName: "removeLiquidity",
     args: [cclt],
     chainId: 4202,
@@ -170,7 +186,7 @@ export const swapCC = (ccltAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+    address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
     functionName: "swapCC",
     args: [cclt],
     chainId: 4202,

@@ -1,23 +1,22 @@
 import { FaArrowRight, FaCog } from "react-icons/fa";
 import { IoSwapVertical } from "react-icons/io5";
 import Dropdown from "../components/Dropdown";
-import { getCCBalance, getPoolRatio, getTTBalance } from "../utils/ccUtils";
+import { getCCBalance, getCCtoTTPrice, getTTBalance } from "../utils/ccUtils";
 
 const Simple = () => {
   const navigate = useNavigate();
   const { address } = useAccount();
   const [swapAmount, setSwapAmount] = useState(0);
+  const { writeContract, isSuccess, error, isPending } = useWriteContract();
 
   const swapCC = (ccltAmount: number) => {
-    const { writeContract } = useWriteContract();
-
-    const cclt = ethers.parseUnits((ccltAmount * 10 ** 18).toString(), "wei");
+    const cclt = ethers.parseUnits(ccltAmount.toString(), "ether");
 
     console.log("cclt", cclt);
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x857260f0f04571c9512cb94D36948b0027583b9D",
+      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
       functionName: "swapCC",
       args: [cclt],
       chainId: 4202,
@@ -97,12 +96,15 @@ const Simple = () => {
             <div className=" p-3 bg-[#2b3342] rounded-lg border border-[#516AE4]">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[#717A8C]">Price</p>
-                <p className="text-[#717A8C]">{getPoolRatio()} TT</p>
+                <p className="text-[#717A8C]">
+                  1 CC = {getCCtoTTPrice() * 10 ** -18} TT
+                </p>
               </div>
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[#717A8C]">You will receive</p>
                 <p className="text-[#717A8C]">
-                  {swapAmount} CC = {swapAmount * getPoolRatio()} TT
+                  {swapAmount} CC ={" "}
+                  {swapAmount * (getCCtoTTPrice() * 10 ** -18)} TT
                 </p>
               </div>
               <div className="flex items-center justify-between mb-2">
@@ -118,6 +120,16 @@ const Simple = () => {
               Swap
             </button>
           </div>
+          {isPending && !isSuccess && (
+            <p className="text-[#76809D]">Loading...</p>
+          )}
+          {isSuccess && (
+            <p className="text-[#76809D]">Withdrawal successful!</p>
+          )}
+          {error && <p className="text-[#76809D]">Error making transaction</p>}
+          {error && (
+            <div className="text-red-500 mt-2">Error: {error.message}</div>
+          )}
         </div>
       </article>
     </div>
