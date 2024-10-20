@@ -8,7 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import Login from "./pages/Login.tsx";
+
 import DashboardHOC from "./HOCs/DashboardHOC";
 import Geography from "./pages/Geography.tsx";
 import Pie from "./pages/Pie.tsx";
