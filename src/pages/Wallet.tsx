@@ -8,6 +8,7 @@ import {
   useAccount,
   useDisconnect,
   useWriteContract,
+  useChainId,
 } from "wagmi";
 
 import { ethers } from "ethers";
@@ -44,6 +45,17 @@ const Wallet = () => {
 
   let { writeContract, isSuccess, error, isPending } = useWriteContract();
 
+  const chainId = useChainId();
+
+  let ccSwapAddress: `0x${string}` =
+    "0xafC9D020d0b67522337058f0fDea057769dd386A";
+
+  if (chainId == 4202) {
+    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+  } else if (chainId == 84532) {
+    ccSwapAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+  }
+
   const depositLiquidity = (ccAmount: number, ttAmount: number) => {
     const cc = ethers.parseUnits(ccAmount.toString(), "ether");
     let tt = ethers.parseUnits(ttAmount.toString(), "ether");
@@ -52,10 +64,10 @@ const Wallet = () => {
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
+      address: ccSwapAddress,
       functionName: "addLiquidity",
       args: [cc, tt],
-      chainId: 4202,
+      chainId: chainId,
     });
   };
 
@@ -73,10 +85,10 @@ const Wallet = () => {
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
+      address: ccSwapAddress,
       functionName: "removeLiquidity",
       args: [cclt],
-      chainId: 4202,
+      chainId: chainId,
     });
 
     return;

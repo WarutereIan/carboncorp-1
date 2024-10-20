@@ -9,6 +9,17 @@ const Simple = () => {
   const [swapAmount, setSwapAmount] = useState(0);
   const { writeContract, isSuccess, error, isPending } = useWriteContract();
 
+  const chainId = useChainId();
+
+  let ccSwapAddress: `0x${string}` =
+    "0xafC9D020d0b67522337058f0fDea057769dd386A";
+
+  if (chainId == 4202) {
+    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+  } else if (chainId == 84532) {
+    ccSwapAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+  }
+
   const swapCC = (ccltAmount: number) => {
     const cclt = ethers.parseUnits(ccltAmount.toString(), "ether");
 
@@ -16,10 +27,10 @@ const Simple = () => {
 
     writeContract({
       abi: ccswapAbi,
-      address: "0x665FE43468B4a10128a406bc4F826065C9cDA877",
+      address: ccSwapAddress,
       functionName: "swapCC",
       args: [cclt],
-      chainId: 4202,
+      chainId: chainId,
     });
 
     return;
@@ -143,7 +154,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useChainId, useWriteContract } from "wagmi";
 import { ethers } from "ethers";
 import { ccswapAbi } from "../utils/abis/ccswap";
 

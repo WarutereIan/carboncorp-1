@@ -1,10 +1,16 @@
-import { MdCo2, MdFileDownload, MdToken } from "react-icons/md";
+import { MdCo2,  MdToken } from "react-icons/md";
 import BarChart from "../components/BarChart";
 import GeographyChart from "../components/GeographyChart";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 import ShowWallet from "../components/ShowWallet";
+
 import LineChart from "../components/LineChart";
+
+import { useChains, useChainId } from "wagmi";
+import { switchChain } from "@wagmi/core";
+import { config } from "../utils/wagmiConfig";
+
 
 const transactions = [
   {
@@ -52,6 +58,16 @@ const transactions = [
 ];
 
 const DashBoard = () => {
+  const chains = useChains();
+  const chainId = useChainId();
+
+  console.log("chains", chainId);
+  console.log("chains", chains);
+
+  const activeChain = chains.find((chain) => chain.id == chainId);
+
+  console.log(activeChain?.name);
+
   return (
     <div>
       <div className="p-3 flex justify-between items-center">
@@ -61,9 +77,15 @@ const DashBoard = () => {
         </div>
         <div className="flex items-center gap-2">
           <ShowWallet />
-          <button className="flex items-center text-sm gap-2 bg-[#3E4396] text-white px-2 py-1 rounded">
-            <MdFileDownload />
-            DOWNLOAD REPORTS
+          <button
+            className="flex items-center text-sm gap-2 bg-[#3E4396] text-white px-2 py-1 rounded"
+            onClick={async () => {
+              await switchChain(config, { chainId: 84532 });
+            }}
+          >
+            {activeChain?.name == "Base Sepolia"
+              ? activeChain?.name
+              : "CHANGE NETWORK"}
           </button>
         </div>
       </div>
