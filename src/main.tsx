@@ -28,7 +28,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Login />,
+    //element: <Login />,
+    element: (
+      <DashboardHOC>
+        <DashBoard />
+      </DashboardHOC>
+    ),
   },
   {
     path: "/dashboard",
@@ -110,15 +115,15 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-      <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" />
         <RouterProvider router={router} />
-        </QueryClientProvider>
+      </QueryClientProvider>
     </WagmiProvider>
   </StrictMode>
 );
