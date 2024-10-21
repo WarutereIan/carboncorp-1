@@ -6,9 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./CC_CertificateToken.sol";
+import "./CCToken.sol";
 
 contract CCMarketPlace is Ownable, ERC20 {
-    IERC20 public immutable asset;
+    CCToken public immutable asset;
     IERC20 public immutable otherToken;
     CC_CertificateToken public Certificate;
 
@@ -20,7 +21,7 @@ contract CCMarketPlace is Ownable, ERC20 {
     uint private constant FEE_NUMERATOR = 10; // 1% fee
 
     constructor(
-        IERC20 asset_,
+        CCToken asset_,
         IERC20 otherToken_
     ) Ownable(msg.sender) ERC20("Carbon Corps Liquidity Token", "CCLT") {
         asset = asset_;
@@ -28,17 +29,16 @@ contract CCMarketPlace is Ownable, ERC20 {
         Certificate = new CC_CertificateToken();
     }
 
-    function swapCC(uint _amountIn) external returns (uint amountOut) {
+     function swapCC(uint _amountIn) external returns (uint amountOut) {
         require(_amountIn > 0, "amountIn = 0");
-        require(asset.balanceOf(msg.sender) >= _amountIn, "Insufficient balance");
-        require(asset.allowance(msg.sender, address(this)) >= _amountIn, "Insufficient allowance");
+        require(asset.balanceOf(msg.sender) >= _amountIn, "Insufficient CC balance");
+        require(asset.allowance(msg.sender, address(this)) >= _amountIn, "Insufficient CC allowance");
 
         uint amountInWithFee = (_amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR)) / FEE_DENOMINATOR;
-
         amountOut = (otherTokenReserve * amountInWithFee) / (assetReserve + amountInWithFee);
 
-        require(amountOut > 0, "Insufficient output amount");
-        require(otherToken.balanceOf(address(this)) >= amountOut, "Insufficient liquidity");
+        require(amountOut > 0, "Insufficient output amount from swap");
+        require(otherToken.balanceOf(address(this)) >= amountOut, "Insufficient liquidity in Pool");
 
         asset.transferFrom(msg.sender, address(this), _amountIn);
         otherToken.transfer(msg.sender, amountOut);
@@ -49,13 +49,12 @@ contract CCMarketPlace is Ownable, ERC20 {
         );
     }
 
-    function swapOtherToken(uint _amountIn) external returns (uint amountOut) {
+      function swapOtherToken(uint _amountIn) external returns (uint amountOut) {
         require(_amountIn > 0, "amountIn = 0");
         require(otherToken.balanceOf(msg.sender) >= _amountIn, "Insufficient balance");
         require(otherToken.allowance(msg.sender, address(this)) >= _amountIn, "Insufficient allowance");
 
         uint amountInWithFee = (_amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR)) / FEE_DENOMINATOR;
-
         amountOut = (assetReserve * amountInWithFee) / (otherTokenReserve + amountInWithFee);
 
         require(amountOut > 0, "Insufficient output amount");
@@ -64,7 +63,26 @@ contract CCMarketPlace is Ownable, ERC20 {
         otherToken.transferFrom(msg.sender, address(this), _amountIn);
         asset.transfer(msg.sender, amountOut);
 
-        Certificate.mint(msg.sender, amountOut);
+        _updateReserves(
+            asset.balanceOf(address(this)),
+            otherToken.balanceOf(address(this))
+        );
+    }
+
+     function offsetCarbon(uint _amountIn) external returns (uint amountOffset) {
+        require(_amountIn > 0, "amountIn = 0");
+        require(otherToken.balanceOf(msg.sender) >= _amountIn, "Insufficient balance to offset");
+        require(otherToken.allowance(msg.sender, address(this)) >= _amountIn, "Insufficient allowance");
+
+        uint amountInWithFee = (_amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR)) / FEE_DENOMINATOR;
+        amountOffset = (assetReserve * amountInWithFee) / (otherTokenReserve + amountInWithFee);
+
+        require(amountOffset > 0, "Insufficient offset amount");
+        require(asset.balanceOf(address(this)) >= amountOffset, "Insufficient liquidity in Pool");
+
+        otherToken.transferFrom(msg.sender, address(this), _amountIn);
+        asset.burn(amountOffset); 
+        Certificate.mint(msg.sender, amountOffset);
 
         _updateReserves(
             asset.balanceOf(address(this)),
