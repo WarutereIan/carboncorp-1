@@ -1,9 +1,9 @@
 
-# CarbonCorp DEX Pool Protocol 
+# CarbonCorp Protocol - DEX 
 
 ## Overview
 
-The Carbon Corps DEX (Decentralized Exchange) is a smart contract that facilitates the exchange between two types of tokens: "CC" (Carbon Credit) tokens and an "other" ERC20 token (stablecoin e.g USDC). It uses an automated market maker (AMM) model with a constant product formula (x * y = k) to determine exchange rates. The protocol allows users to provide liquidity, earn fees, swap tokens, and offset carbon by converting their stablecoin tokens into verifiable carbon offset certificates.
+The CarbonCorp DEX (Decentralized Exchange) is a smart contract that facilitates the exchange between two types of tokens: "CC" (Carbon Credit) tokens and an "other" ERC20 token (stablecoin e.g USDC). It uses an automated market maker (AMM) model with a constant product formula (x * y = k) to determine exchange rates. The protocol allows users to provide liquidity, earn fees, swap tokens, and offset carbon by converting their stablecoin tokens into verifiable carbon offset certificates.
 
 ## Key Components
 
