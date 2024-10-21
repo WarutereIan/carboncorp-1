@@ -48,12 +48,12 @@ const Wallet = () => {
   const chainId = useChainId();
 
   let ccSwapAddress: `0x${string}` =
-    "0xafC9D020d0b67522337058f0fDea057769dd386A";
+    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
     ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   const depositLiquidity = (ccAmount: number, ttAmount: number) => {
@@ -129,11 +129,11 @@ const Wallet = () => {
         subtitle="Connect a wallet that you own."
       />
 
-      <section className="flex flex-col justify-center gap-10 items-center h-full space-y-10">
+      <section className="flex flex-col justify-center gap- items-center h-full space-y-1 mt-100">
         {!isConnected ? (
-          <div className="rounded-lg w-[25rem] p-5 c bg-white ">
+          <div className="rounded-lg w-[25rem] p-5 c bg-white">
             <h4 className="text-black font-semibold">Connect to wallet</h4>
-            <div>
+            <div className="h-50">
               {connectors.map((connector) => (
                 <div className="flex justify-between gap-3 bg-[#DBDDE5] border p-3 rounded-md shadow items-center mt-3">
                   <WalletOption
