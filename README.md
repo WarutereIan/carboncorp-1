@@ -59,8 +59,9 @@ Similar to `swapCC`, this function allows users to buy CC tokens with other toke
 ## 3. offsetCarbon
 
 
-
-`function  offsetCarbon(uint _amountIn)  external  returns  (uint amountOffset)`
+```solidity
+function  offsetCarbon(uint _amountIn)  external  returns  (uint amountOffset)
+```
 
 **Arithmetic:**
 
@@ -191,17 +192,17 @@ A CC Certificate (ERC720 token) is minted when a user offsets carbon using the `
 5. Implementation of a governance mechanism for adjusting parameters such as fees or updating the oracle address.
 6. Implementation of a mechanism to track and report total carbon offsets achieved through the protocol.
 
+## Contract Addresses (Base Sepolia)
+Contract Addresses for the protocol are as below on base sepolia:
 
-Contract Addresses for the protocol can be found at the following address on base sepolia:
+##### CC Token:
+ 0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD
 
-CC Token: 0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD
-
-Test ERC20 Token (used in trading pair ) : 
+##### Test ERC20 Token (used in trading pair ) : 
 0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b
 
-Dex Pool Smart Contract:
+##### Dex Pool Smart Contract:
 0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5
 
-CC Certificate Token:
+##### CC Certificate Token:
 0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204  
-
