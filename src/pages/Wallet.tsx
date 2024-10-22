@@ -9,11 +9,14 @@ import {
   useDisconnect,
   useWriteContract,
   useChainId,
+  useReadContract,
+  useWatchContractEvent,
 } from "wagmi";
 
 import { ethers } from "ethers";
 import { getCCBalance, getCCLTBalance, getTTBalance } from "../utils/ccUtils";
 import { ccswapAbi } from "../utils/abis/ccswap";
+import { erc20Abi } from "viem";
 
 const Wallet = () => {
   /*  const [init, setInit] = useState(false);
@@ -42,6 +45,7 @@ const Wallet = () => {
   const [ttDepositAmount, setTTDepositAmount] = useState(0);
   const [withdrawalAmount, setWithdrawalAmount] = useState(0);
   const [activeAction, setActiveAction] = useState(0);
+  const [isRequesting, setIsRequesting] = useState(false);
 
   let { writeContract, isSuccess, error, isPending } = useWriteContract();
 
@@ -56,6 +60,105 @@ const Wallet = () => {
     ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
+  let CCAddress: `0x${string}` = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+  let TTAddress: `0x${string}` = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+
+  //get allowance
+  const { data: allowanceTT, refetch } = useReadContract({
+    abi: erc20Abi,
+    address: TTAddress,
+    functionName: "allowance",
+    args: [address!, ccSwapAddress],
+    account: address,
+    chainId: 84532,
+  });
+
+  useWatchContractEvent({
+    address: TTAddress,
+    abi: erc20Abi,
+    eventName: "Approval",
+    onLogs(logs) {
+      const relevantLog = logs.find((log) => log.args.owner === address);
+      if (relevantLog) {
+        refetch();
+      }
+    },
+  });
+
+  const { data: allowanceCC } = useReadContract({
+    abi: erc20Abi,
+    address: CCAddress,
+    functionName: "allowance",
+    args: [address!, ccSwapAddress],
+    account: address,
+    chainId: 84532,
+  });
+
+  useWatchContractEvent({
+    address: CCAddress,
+    abi: erc20Abi,
+    eventName: "Approval",
+    onLogs(logs) {
+      const relevantLog = logs.find((log) => log.args.owner === address);
+      if (relevantLog) {
+        refetch();
+      }
+    },
+  });
+
+  let CC_allowance;
+  let TT_allowance;
+
+  if (allowanceCC) {
+    CC_allowance = ethers.formatUnits(allowanceCC!, 18);
+  } else {
+    CC_allowance = 0;
+  }
+
+  if (allowanceTT) {
+    TT_allowance = ethers.formatUnits(allowanceTT!, 18);
+  } else {
+    TT_allowance = 0;
+  }
+
+  useEffect(() => {
+    if (allowanceTT) {
+      TT_allowance = ethers.formatUnits(allowanceTT!, 18);
+    } else {
+      TT_allowance = 0;
+    }
+  }, [allowanceTT]);
+
+  useEffect(() => {
+    if (allowanceCC) {
+      CC_allowance = ethers.formatUnits(allowanceCC!, 18);
+    } else {
+      CC_allowance = 0;
+    }
+  }, [allowanceCC]);
+
+  const approveTTSpender = () => {
+    writeContract({
+      abi: erc20Abi,
+      address: TTAddress,
+      functionName: "approve",
+      args: [ccSwapAddress, ethers.parseEther("1000000")],
+      chainId: 84532,
+    });
+  };
+
+  const approveCCSpender = () => {
+    writeContract({
+      abi: erc20Abi,
+      address: CCAddress,
+      functionName: "approve",
+      args: [ccSwapAddress, ethers.parseEther("1000000")],
+      chainId: 84532,
+    });
+  };
+
+  //check for allowance for the tokens, if zero give as 1m
+
   const depositLiquidity = (ccAmount: number, ttAmount: number) => {
     const cc = ethers.parseUnits(ccAmount.toString(), "ether");
     let tt = ethers.parseUnits(ttAmount.toString(), "ether");
@@ -67,7 +170,7 @@ const Wallet = () => {
       address: ccSwapAddress,
       functionName: "addLiquidity",
       args: [cc, tt],
-      chainId: chainId,
+      chainId: 84532,
     });
   };
 
@@ -88,7 +191,7 @@ const Wallet = () => {
       address: ccSwapAddress,
       functionName: "removeLiquidity",
       args: [cclt],
-      chainId: chainId,
+      chainId: 84532,
     });
 
     return;
@@ -198,6 +301,15 @@ const Wallet = () => {
               <p className="text-[#76809D]">Available</p>
               <p className="text-[#76809D]">{getCCBalance(address!)} CC</p>
               <p className="text-[#76809D]">{getTTBalance(address!)} TT</p>
+            </div>
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-[#76809D]">Allowance:</p>
+              <p className="text-[#76809D]">
+                {Number(CC_allowance?.toString()).toFixed(4)} CC
+              </p>
+              <p className="text-[#76809D]">
+                {Number(TT_allowance?.toString()).toFixed(4)} TT
+              </p>
             </div>
             {/* <p className="text-[#76809D]">
               Amount to be deposited: {depositAmount} CC :{" "}
@@ -336,7 +448,67 @@ const Wallet = () => {
           </div>
 
           <div>
-            <button onClick={() => disconnect()}>Disconnect Wallet</button>
+            <div className="flex flex-row justify-between gap-5">
+              <button
+                className="bg-[#00632B] p-2 text-white rounded-lg"
+                onClick={approveCCSpender}
+              >
+                Increase CC Allowance
+              </button>
+              <button
+                className="bg-[#00632B] p-2 text-white rounded-lg"
+                onClick={approveTTSpender}
+              >
+                Increase TT Allowance
+              </button>
+            </div>
+
+            <div className="flex justify-center mt-3">
+              <button
+                className="bg-[#00632B] p-2 text-white rounded-lg"
+                onClick={async () => {
+                  //make call to faucet
+                  const url = `http://13.61.19.24:80/faucet/${address!}`;
+
+                  setIsRequesting(true);
+
+                  try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                      throw new Error(`Response status: ${response.status}`);
+                    }
+                    console.log(response);
+
+                    const json = await response.json();
+                    console.log(json);
+
+                    setIsRequesting(false);
+
+                    return alert(
+                      JSON.stringify({
+                        msg: json.msg,
+                        tx1_hash: json.CC,
+                        tx2_hash: json.TT,
+                      })
+                    );
+                  } catch (error: any) {
+                    console.error(error.message);
+                    alert(error);
+                  }
+                }}
+              >
+                {isRequesting ? "Requesting..." : "Request Faucet Tokens"}
+              </button>
+            </div>
+
+            <div className="flex justify-center mt-3">
+              <button
+                className="bg-[red] p-2 text-white rounded-lg"
+                onClick={() => disconnect()}
+              >
+                Disconnect Wallet
+              </button>
+            </div>
           </div>
         </div>
       </section>

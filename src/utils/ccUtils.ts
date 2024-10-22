@@ -7,6 +7,55 @@ import { useWriteContract } from "wagmi";
 import { ccswapAbi } from "./abis/ccswap";
 import { useEffect, useState } from "react";
 
+export const checkAllowance = (address: `0x${string}`) => {
+  let CCAddress: `0x${string}` = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+  let TTAddress: `0x${string}` = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+
+  let { writeContract } = useWriteContract();
+
+  const { data: allowanceTT } = useReadContract({
+    abi: erc20Abi,
+    address: TTAddress,
+    functionName: "allowance",
+    args: [address!, CCAddress],
+    account: address,
+    chainId: 84532,
+  });
+  const { data: allowanceCC } = useReadContract({
+    abi: erc20Abi,
+    address: CCAddress,
+    functionName: "allowance",
+    args: [address!, CCAddress],
+    account: address,
+    chainId: 84532,
+  });
+
+  let CC_allowance = allowanceCC;
+  let TT_allowance = allowanceTT;
+
+  console.log("CC allowance", CC_allowance);
+  console.log("TT allowance", TT_allowance);
+
+  if (TT_allowance == BigInt(0)) {
+    writeContract({
+      abi: erc20Abi,
+      address: TTAddress,
+      functionName: "approve",
+      args: [CCAddress, ethers.parseEther("1000000")],
+      chainId: 84532,
+    });
+  }
+  if (CC_allowance == BigInt(0)) {
+    writeContract({
+      abi: erc20Abi,
+      address: CCAddress,
+      functionName: "approve",
+      args: [CCAddress, ethers.parseEther("1000000")],
+      chainId: 84532,
+    });
+  }
+};
+
 export const getCCCTBalance = (address: `0x${string}`) => {
   const [balance, setBalance] = useState<string>("0");
   const chainId = useChainId();
@@ -142,18 +191,17 @@ export const getCCLTBalance = (address: `0x${string}`) => {
   const [balance, setBalance] = useState<string>("0");
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   const { data: balanceCCLT, refetch } = useReadContract({
     abi: erc20Abi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "balanceOf",
     args: [address],
     account: address,
@@ -167,7 +215,7 @@ export const getCCLTBalance = (address: `0x${string}`) => {
   }, [balanceCCLT]);
 
   useWatchContractEvent({
-    address: ccSwapAddress,
+    address: CCAddress,
     abi: erc20Abi,
     eventName: "Transfer",
     onLogs(logs) {
@@ -186,18 +234,17 @@ export const getCCLTBalance = (address: `0x${string}`) => {
 export const getPoolRatio = () => {
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   const { data: poolRatio } = useReadContract({
     abi: ccswapAbi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "getPoolRatio",
     //blockTag: "safe",
     chainId: chainId,
@@ -211,17 +258,16 @@ export const getPoolRatio = () => {
 export const getCCtoTTPrice = () => {
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
   const { data: CCtoTTPrice } = useReadContract({
     abi: ccswapAbi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "getAssetPrice",
     //blockTag: "safe",
     chainId: chainId,
@@ -235,13 +281,12 @@ export const getCCtoTTPrice = () => {
 export const depositLiquidity = (ccAmount: number, ttAmount: number) => {
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
   const { writeContract } = useWriteContract();
 
@@ -252,7 +297,7 @@ export const depositLiquidity = (ccAmount: number, ttAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "addLiquidity",
     args: [cc, tt],
     chainId: chainId,
@@ -266,13 +311,12 @@ export const withdrawLiquidity = (ccltAmount: number) => {
 
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   const cclt = ethers.parseUnits((ccltAmount * 10 ** 18).toString(), "wei");
@@ -281,7 +325,7 @@ export const withdrawLiquidity = (ccltAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "removeLiquidity",
     args: [cclt],
     chainId: chainId,
@@ -295,13 +339,12 @@ export const swapCC = (ccltAmount: number) => {
 
   const chainId = useChainId();
 
-  let ccSwapAddress: `0x${string}` =
-    "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+  let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
   } else if (chainId == 84532) {
-    ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   const cclt = ethers.parseUnits((ccltAmount * 10 ** 18).toString(), "wei");
@@ -310,7 +353,7 @@ export const swapCC = (ccltAmount: number) => {
 
   writeContract({
     abi: ccswapAbi,
-    address: ccSwapAddress,
+    address: CCAddress,
     functionName: "swapCC",
     args: [cclt],
     chainId: chainId,

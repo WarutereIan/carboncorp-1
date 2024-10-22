@@ -1,4 +1,4 @@
-import { MdCo2,  MdToken } from "react-icons/md";
+import { MdCo2, MdToken } from "react-icons/md";
 import BarChart from "../components/BarChart";
 import GeographyChart from "../components/GeographyChart";
 import { IoPersonAddSharp } from "react-icons/io5";
@@ -10,7 +10,6 @@ import LineChart from "../components/LineChart";
 import { useChains, useChainId } from "wagmi";
 import { switchChain } from "@wagmi/core";
 import { config } from "../utils/wagmiConfig";
-
 
 const transactions = [
   {
