@@ -468,12 +468,15 @@ const Wallet = () => {
                 className="bg-[#00632B] p-2 text-white rounded-lg"
                 onClick={async () => {
                   //make call to faucet
-                  const url = `http://13.61.19.24:80/faucet/${address!}`;
+                  const url = `https://api.carboncorp.xyz/faucet/${address!}`;
 
                   setIsRequesting(true);
 
                   try {
-                    const response = await fetch(url);
+                    const response = await fetch(url, {
+                      /* body: JSON.stringify({ wallet: address }),
+                      method: "POST", */
+                    });
                     if (!response.ok) {
                       throw new Error(`Response status: ${response.status}`);
                     }
@@ -493,6 +496,7 @@ const Wallet = () => {
                     );
                   } catch (error: any) {
                     console.error(error.message);
+                    setIsRequesting(false);
                     alert(error);
                   }
                 }}
