@@ -76,7 +76,7 @@ export const getCCCTBalance = (address: `0x${string}`) => {
   let CCCTAddress: `0x${string}` = "0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204";
 
   if (chainId == 4202) {
-    CCCTAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
+    CCCTAddress = "0x4a62fa31Cd52BE39a57621783f16DEC3c54e30ac";
   } else if (chainId == 84532) {
     CCCTAddress = "0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204";
   }
