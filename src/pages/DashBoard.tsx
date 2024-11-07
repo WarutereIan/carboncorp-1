@@ -79,10 +79,10 @@ const DashBoard = () => {
           <button
             className="flex items-center text-sm gap-2 bg-[#3E4396] text-white px-2 py-1 rounded"
             onClick={async () => {
-              await switchChain(config, { chainId: 84532 });
+              await switchChain(config, { chainId: 4202 });
             }}
           >
-            {activeChain?.name == "Base Sepolia"
+            {activeChain?.name == "Lisk Sepolia"
               ? activeChain?.name
               : "CHANGE NETWORK"}
           </button>

@@ -1,9 +1,8 @@
-
-# CarbonCorp Protocol - DEX 
+# CarbonCorp Protocol - DEX
 
 ## Overview
 
-The CarbonCorp DEX (Decentralized Exchange) is a smart contract that facilitates the exchange between two types of tokens: "CC" (Carbon Credit) tokens and an "other" ERC20 token (stablecoin e.g USDC). It uses an automated market maker (AMM) model with a constant product formula (x * y = k) to determine exchange rates. The protocol allows users to provide liquidity, earn fees, swap tokens, and offset carbon by converting their stablecoin tokens into verifiable carbon offset certificates.
+The CarbonCorp DEX (Decentralized Exchange) is a smart contract that facilitates the exchange between two types of tokens: "CC" (Carbon Credit) tokens and an "other" ERC20 token (stablecoin e.g USDC). It uses an automated market maker (AMM) model with a constant product formula (x \* y = k) to determine exchange rates. The protocol allows users to provide liquidity, earn fees, swap tokens, and offset carbon by converting their stablecoin tokens into verifiable carbon offset certificates.
 
 ## Key Components
 
@@ -12,18 +11,17 @@ The CarbonCorp DEX (Decentralized Exchange) is a smart contract that facilitates
 3. CCLT (CarbonCorp Liquidity Token): An ERC20 token representing liquidity provider shares
 4. CC Certificate: An ERC720 token minted when users swap other tokens for CC tokens
 
-
 ## Token Mechanics
 
 ### CC Token Minting and Burning
 
 1.  CC tokens are minted through a separate process:
-    -   Carbon offsets are verified for a specific user through an external process.
-    -   An oracle invokes the minting function after verification.
-    -   CC tokens are then issued directly to the user who achieved the carbon offset.
+    - Carbon offsets are verified for a specific user through an external process.
+    - An oracle invokes the minting function after verification.
+    - CC tokens are then issued directly to the user who achieved the carbon offset.
 2.  CC tokens are burned when users offset carbon:
-    -   When a user offsets carbon using the secondary stablecoin tokens, the equivalent amount of CC tokens are burned.
-    -   A CC Certificate (ERC720) is issued to the user, representing the carbon offset.
+    - When a user offsets carbon using the secondary stablecoin tokens, the equivalent amount of CC tokens are burned.
+    - A CC Certificate (ERC720) is issued to the user, representing the carbon offset.
 
 This process ensures that each CC token and CC Certificate represents a verified carbon credit, maintaining the integrity and value of the carbon offsets traded on the DEX.
 
@@ -38,10 +36,11 @@ function swapCC(uint _amountIn) external returns (uint amountOut)
 ```
 
 **Arithmetic:**
+
 1. Calculate fee: `amountInWithFee = _amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR) / FEE_DENOMINATOR`
 2. Calculate output: `amountOut = (otherTokenReserve * amountInWithFee) / (ccTokenReserve + amountInWithFee)`
 
-This function uses the constant product formula (x * y = k) to determine the output amount. The fee is deducted from the input amount before calculating the swap.
+This function uses the constant product formula (x \* y = k) to determine the output amount. The fee is deducted from the input amount before calculating the swap.
 
 #### 2. swapOtherToken (Other Token to CC Token)
 
@@ -50,14 +49,15 @@ function swapOtherToken(uint _amountIn) external returns (uint amountOut)
 ```
 
 **Arithmetic:**
+
 1. Calculate fee: `amountInWithFee = _amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR) / FEE_DENOMINATOR`
 2. Calculate output: `amountOut = (ccTokenReserve * amountInWithFee) / (otherTokenReserve + amountInWithFee)`
 
 Similar to `swapCC`, this function allows users to buy CC tokens with other tokens.
+
 ### Carbon Offsetting
 
 ## 3. offsetCarbon
-
 
 ```solidity
 function  offsetCarbon(uint _amountIn)  external  returns  (uint amountOffset)
@@ -68,10 +68,10 @@ function  offsetCarbon(uint _amountIn)  external  returns  (uint amountOffset)
 1.  Calculate fee: `amountInWithFee = _amountIn * (FEE_DENOMINATOR - FEE_NUMERATOR) / FEE_DENOMINATOR`
 2.  Calculate offset amount: `amountOffset = (ccTokenReserve * amountInWithFee) / (otherTokenReserve + amountInWithFee)`
 
-**Additional steps:**  
+**Additional steps:**
 
 3. Burn CC tokens: `ccToken.burn(amountOffset)`
- 4. Mint CC Certificate: `ccCertificate.mint(msg.sender, amountOffset)`
+4. Mint CC Certificate: `ccCertificate.mint(msg.sender, amountOffset)`
 
 This function allows users to offset carbon by exchanging other tokens for CC Certificates. The equivalent amount of CC tokens is burned in the process.
 
@@ -84,6 +84,7 @@ function addLiquidity(uint _ccTokenAmount, uint _otherTokenAmount) external retu
 ```
 
 **Arithmetic:**
+
 1. If total supply is 0:
    `shares = sqrt(_ccTokenAmount * _otherTokenAmount)`
 2. If total supply > 0:
@@ -102,6 +103,7 @@ function removeLiquidity(uint _shares) external returns (uint _ccTokenAmount, ui
 ```
 
 **Arithmetic:**
+
 1. Calculate CC token amount: `_ccTokenAmount = (_shares * ccTokenReserve) / totalSupply`
 2. Calculate other token amount: `_otherTokenAmount = (_shares * otherTokenReserve) / totalSupply`
 
@@ -136,6 +138,7 @@ function estimateCCToOtherToken(uint ccTokenAmount) public view returns (uint)
 ```
 
 **Arithmetic:**
+
 1. Apply fee: `amountWithFee = ccTokenAmount * (FEE_DENOMINATOR - FEE_NUMERATOR) / FEE_DENOMINATOR`
 2. Estimate output: `return (otherTokenReserve * amountWithFee) / (ccTokenReserve + amountWithFee)`
 
@@ -148,6 +151,7 @@ function estimateOtherTokenToCC(uint otherTokenAmount) public view returns (uint
 ```
 
 **Arithmetic:**
+
 1. Apply fee: `amountWithFee = otherTokenAmount * (FEE_DENOMINATOR - FEE_NUMERATOR) / FEE_DENOMINATOR`
 2. Estimate output: `return (ccTokenReserve * amountWithFee) / (otherTokenReserve + amountWithFee)`
 
@@ -162,6 +166,7 @@ The protocol charges a 1% fee on all swaps and carbon offsets. This fee is subtr
 The DEX uses the constant product formula: `x * y = k`
 
 Where:
+
 - x: Reserve of CC token
 - y: Reserve of other token
 - k: Constant product
@@ -182,7 +187,6 @@ A CC Certificate (ERC720 token) is minted when a user offsets carbon using the `
 2. It prevents division by zero errors by checking for non-zero reserves.
 3. Slippage protection should be implemented on the client side using the estimation functions.
 
-
 ## Current Limitations and Future Improvements
 
 1. The contract does not implement slippage protection at the contract level.
@@ -192,17 +196,22 @@ A CC Certificate (ERC720 token) is minted when a user offsets carbon using the `
 5. Implementation of a governance mechanism for adjusting parameters such as fees or updating the oracle address.
 6. Implementation of a mechanism to track and report total carbon offsets achieved through the protocol.
 
-## Contract Addresses (Base Sepolia)
-Contract Addresses for the protocol are as below on base sepolia:
+## Contract Addresses (Lisk Sepolia)
+
+Contract Addresses for the protocol are as below on Lisk sepolia:
 
 ##### CC Token:
- 0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD
 
-##### Test ERC20 Token (used in trading pair ) : 
-0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b
+0xafC9D020d0b67522337058f0fDea057769dd386A
+
+##### Test ERC20 Token (used in trading pair ) :
+
+0x8f6fDE1B60e0d74CA7B3fD496444Dac2f2C7d882
 
 ##### Dex Pool Smart Contract:
-0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5
+
+0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F
 
 ##### CC Certificate Token:
-0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204  
+
+0x4a62fa31Cd52BE39a57621783f16DEC3c54e30ac

@@ -1,17 +1,26 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { PaperCarbonOffsetCalculator } from "./calculator";
 import { ProjectData, PrintParameters, Document } from "./types";
+import { createServer } from "http";
+import { ethers } from "ethers";
+import cors from "cors";
 
 // In-memory storage for documents and print parameters (For demonstration purposes)
 const documentsStore: Record<string, ProjectData> = {};
 
 // Blockchain configuration
-const providerUrl = "https://sepolia.base.org"; // Blockchain provider URL
-const contractAddress = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD"; // CCToken contract address
-const signerPrivateKey = process.env.PRIVATE_KEY!; // minter address private key
+const providerUrl = "https://rpc.sepolia-api.lisk.com/"; // Blockchain provider URL
+let contractAddress = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD"; // CCToken contract address
+const signerPrivateKey = process.env.PRIVATE_KEY; // minter address private key
 
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "PUT", "POST"],
+  })
+);
 
 // Endpoint to add a document to the system
 app.post("/document", (req, res): any => {
@@ -39,6 +48,62 @@ app.post("/document", (req, res): any => {
   }
 });
 
+app.get("/faucet/:wallet", async (req: any, res: any) => {
+  try {
+    let { wallet } = req.params;
+
+    console.log(wallet);
+
+    const CCTokenAbi = [
+      "function mint(address to, uint256 amount) public",
+      // Other contract methods...
+    ];
+
+    let ccContractAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+    let ttContractAddress = "0x8f6fDE1B60e0d74CA7B3fD496444Dac2f2C7d882";
+
+    // Connect to the blockchain
+    let provider = new ethers.JsonRpcProvider(providerUrl);
+    let signer = new ethers.Wallet(signerPrivateKey!, provider);
+    let tokenContractCC = new ethers.Contract(
+      ccContractAddress,
+      CCTokenAbi,
+      signer
+    );
+
+    /* const nonce = await wallet.getNonce();
+    console.log("nonce", nonce); */
+
+    const tokensToMintCC = ethers.parseUnits("10000", "ether");
+    const CC = await tokenContractCC.mint(wallet, tokensToMintCC);
+
+    const ccTx = await CC.wait();
+
+    console.log(ccTx.hash);
+
+    let tokenContractTT = new ethers.Contract(
+      ttContractAddress,
+      CCTokenAbi,
+      signer
+    );
+    const tokensToMintTT = ethers.parseUnits("15000", "ether");
+    const TT = await tokenContractTT.mint(wallet, tokensToMintTT);
+
+    const ttTX = await TT.wait();
+
+    console.log(ttTX.hash);
+
+    return res.status(200).json({
+      msg: "successfully sent tokens",
+      CC: ccTx.hash,
+      TT: ttTX.hash,
+    });
+  } catch (error: any) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
 // Endpoint to generate carbon offsets and mint tokens
 app.post("/offsets/:documentId", async (req, res: any) => {
   try {
@@ -57,7 +122,7 @@ app.post("/offsets/:documentId", async (req, res: any) => {
       projectData,
       providerUrl,
       contractAddress,
-      signerPrivateKey
+      signerPrivateKey!
     );
 
     // Generate offsets and mint tokens for the user's address
@@ -116,6 +181,13 @@ app.get("/system-report", (req, res): any => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+
+const httpServer = createServer(app);
+
+httpServer.listen(PORT, () => {
+  console.info(
+    `carboncorp Server started on`,
+    httpServer.address(),
+    `PID ${process.pid} \n`
+  );
 });

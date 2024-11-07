@@ -22,7 +22,7 @@ const Simple = () => {
     "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    ccSwapAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }

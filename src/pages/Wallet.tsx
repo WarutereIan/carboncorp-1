@@ -55,14 +55,26 @@ const Wallet = () => {
     "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    ccSwapAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    ccSwapAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     ccSwapAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
 
   let CCAddress: `0x${string}` = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+
+  if (chainId == 4202) {
+    CCAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+  } else if (chainId == 84532) {
+    CCAddress = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+  }
+
   let TTAddress: `0x${string}` = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
 
+  if (chainId == 4202) {
+    TTAddress = "0x8f6fDE1B60e0d74CA7B3fD496444Dac2f2C7d882";
+  } else if (chainId == 84532) {
+    TTAddress = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+  }
   //get allowance
   const { data: allowanceTT, refetch } = useReadContract({
     abi: erc20Abi,
@@ -70,7 +82,7 @@ const Wallet = () => {
     functionName: "allowance",
     args: [address!, ccSwapAddress],
     account: address,
-    chainId: 84532,
+    chainId: chainId,
   });
 
   useWatchContractEvent({
@@ -91,7 +103,7 @@ const Wallet = () => {
     functionName: "allowance",
     args: [address!, ccSwapAddress],
     account: address,
-    chainId: 84532,
+    chainId: chainId,
   });
 
   useWatchContractEvent({
@@ -143,7 +155,7 @@ const Wallet = () => {
       address: TTAddress,
       functionName: "approve",
       args: [ccSwapAddress, ethers.parseEther("1000000")],
-      chainId: 84532,
+      chainId: chainId,
     });
   };
 
@@ -153,7 +165,7 @@ const Wallet = () => {
       address: CCAddress,
       functionName: "approve",
       args: [ccSwapAddress, ethers.parseEther("1000000")],
-      chainId: 84532,
+      chainId: chainId,
     });
   };
 
@@ -170,7 +182,7 @@ const Wallet = () => {
       address: ccSwapAddress,
       functionName: "addLiquidity",
       args: [cc, tt],
-      chainId: 84532,
+      chainId: chainId,
     });
   };
 
@@ -191,7 +203,7 @@ const Wallet = () => {
       address: ccSwapAddress,
       functionName: "removeLiquidity",
       args: [cclt],
-      chainId: 84532,
+      chainId: chainId,
     });
 
     return;

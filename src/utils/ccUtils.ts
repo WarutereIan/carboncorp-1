@@ -7,9 +7,22 @@ import { useWriteContract } from "wagmi";
 import { ccswapAbi } from "./abis/ccswap";
 import { useEffect, useState } from "react";
 
-export const checkAllowance = (address: `0x${string}`) => {
+export const checkAllowance = (address: `0x${string}`, chainId: number) => {
   let CCAddress: `0x${string}` = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+
+  if (chainId == 4202) {
+    CCAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
+  } else if (chainId == 84532) {
+    CCAddress = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
+  }
+
   let TTAddress: `0x${string}` = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+
+  if (chainId == 4202) {
+    TTAddress = "0x8f6fDE1B60e0d74CA7B3fD496444Dac2f2C7d882";
+  } else if (chainId == 84532) {
+    TTAddress = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+  }
 
   let { writeContract } = useWriteContract();
 
@@ -63,7 +76,7 @@ export const getCCCTBalance = (address: `0x${string}`) => {
   let CCCTAddress: `0x${string}` = "0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204";
 
   if (chainId == 4202) {
-    CCCTAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCCTAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     CCCTAddress = "0x6Bc94BdB3a7522eA88cE9DEc8a79b29279e58204";
   }
@@ -106,7 +119,7 @@ export const getCCBalance = (address: `0x${string}`) => {
   let CCAddress: `0x${string}` = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
 
   if (chainId == 4202) {
-    CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
+    CCAddress = "0xafC9D020d0b67522337058f0fDea057769dd386A";
   } else if (chainId == 84532) {
     CCAddress = "0xC3e5c198b7E7599ec171eBB85a6a05d6B947AFaD";
   }
@@ -150,7 +163,7 @@ export const getTTBalance = (address: `0x${string}`) => {
   let TTAddress: `0x${string}` = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
 
   if (chainId == 4202) {
-    TTAddress = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
+    TTAddress = "0x8f6fDE1B60e0d74CA7B3fD496444Dac2f2C7d882";
   } else if (chainId == 84532) {
     TTAddress = "0xD67e53553D5dC3BF78B18d2c1f094E5164ACF15b";
   }
@@ -194,7 +207,7 @@ export const getCCLTBalance = (address: `0x${string}`) => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
@@ -237,7 +250,7 @@ export const getPoolRatio = () => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
@@ -261,7 +274,7 @@ export const getCCtoTTPrice = () => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
@@ -284,7 +297,7 @@ export const depositLiquidity = (ccAmount: number, ttAmount: number) => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x60E26724f5397281b027dca7cA1f8732aEA49243";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
@@ -314,7 +327,7 @@ export const withdrawLiquidity = (ccltAmount: number) => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0x60E26724f5397281b027dca7cA1f8732aEA49243";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
@@ -342,7 +355,7 @@ export const swapCC = (ccltAmount: number) => {
   let CCAddress: `0x${string}` = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
 
   if (chainId == 4202) {
-    CCAddress = "0x665FE43468B4a10128a406bc4F826065C9cDA877";
+    CCAddress = "0xC8fb994B992B01C72c969eC9C077CD030eaD2A7F";
   } else if (chainId == 84532) {
     CCAddress = "0x80cBDf302A2DfAF7bAE3dA05c5EDA91556abBcB5";
   }
